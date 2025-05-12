@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encounter Builder</title>
+    <title>Encounter Builder - Dungeon Brew</title>
     <style>
         /* CSS styles provided by the user, with adaptations for the Encounter Builder */
         body {
@@ -12,17 +12,17 @@
             padding: 0; 
             background: #1e1e1e;
             color: #f5f5f5;
-            overflow-y: auto; 
+            /* Removed flex centering for full page content, overflow-y: auto is default for body */
         }
 
         .container {
-            background: #333; 
+            background: #333; /* Main container for all content */
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 800px; 
+            max-width: 800px; /* Increased max-width for better form layout */
             padding: 20px;
-            margin: 20px auto; 
+            margin: 20px auto; /* Center container on the page */
         }
 
         .branding {
@@ -35,37 +35,39 @@
             height: auto; 
             display: inline-block; 
             margin: 0 auto; 
-            border: 2px solid #ffdd57; 
-            border-radius: 4px; 
+            /* Optional: Add a border if you like the placeholder's look */
+            /* border: 2px solid #ffdd57; 
+            border-radius: 4px;  */
         }
 
-        h1 { 
+        h1 { /* Main page title */
             font-size: 28px; 
             margin-bottom: 10px; 
             color: #ffdd57;
             text-align: center;
         }
-        .page-subtitle { 
+        .page-subtitle { /* Subtitle below the main H1 */
             font-size: 16px;
             color: #f5f5f5;
             text-align: center;
             margin-bottom: 25px;
         }
 
+        /* Styling for encounter sections (adapted from .encounter-card) */
         .encounter-section {
-            background: #444; 
+            background: #444; /* Darker than container, lighter than body */
             border: 1px solid #555;
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            text-align: left; 
+            text-align: left; /* Ensure content within cards is left-aligned */
         }
 
         .encounter-section h2 {
-            font-size: 1.75rem; 
-            font-weight: 600;
-            color: #ffdd57; 
-            margin-top: 0; 
+            font-size: 1.75rem; /* Larger section titles */
+            font-weight: normal; /* Matches h1 from provided CSS which is normal */
+            color: #ffdd57; /* Consistent heading color */
+            margin-top: 0; /* Remove top margin if it's the first element */
             margin-bottom: 1rem;
             border-bottom: 2px solid #555;
             padding-bottom: 0.5rem;
@@ -73,20 +75,23 @@
 
         .form-label {
             display: block;
-            font-weight: 500; 
-            color: #f5f5f5; 
+            font-weight: normal; /* Matches label from provided CSS */
+            color: #f5f5f5; /* Brighter label color */
             margin-bottom: 0.5rem;
+            margin-right: 10px; /* From provided label style */
         }
 
         .form-input, .form-textarea, .form-select {
             width: 100%;
-            background-color: #2a2a2a; 
+            background-color: #2a2a2a; /* Darker input background */
             color: #f5f5f5;
-            border: 1px solid #555; 
+            border: 1px solid #555; /* Softer border */
             border-radius: 5px;
-            padding: 0.75rem;
-            margin-bottom: 1rem; /* Default margin, will be overridden in input-button-group */
+            padding: 10px; /* Consistent padding */
+            margin-bottom: 1rem; 
             box-sizing: border-box; 
+            font-family: 'Arial', sans-serif; /* Ensure form elements inherit font */
+            font-size: 1em; /* Ensure form elements inherit font size */
         }
         
         .form-file-input { 
@@ -125,38 +130,38 @@
         /* Input and Add Button Grouping */
         .input-button-group {
             display: flex;
-            align-items: center; /* Vertically align input and button */
-            margin-bottom: 1rem; /* MODIFIED: Increased space below the group before the hint */
+            align-items: center; 
+            margin-bottom: 1rem; 
         }
         .input-button-group .form-input {
-            flex-grow: 1; /* Input takes available space */
-            margin-bottom: 0; /* Remove bottom margin from input inside group */
-            margin-right: 10px; /* Space between input and button */
+            flex-grow: 1; 
+            margin-bottom: 0; 
+            margin-right: 10px; 
         }
-        .input-button-group .action-button.add-button {
-            flex-shrink: 0; /* Prevent button from shrinking */
+        .input-button-group button { /* Target button inside this group */
+            flex-shrink: 0; 
             margin: 0; /* Reset margin for button in group */
         }
 
 
         /* Button styling */
-        button, .action-button, .primary-action-button {
+        button { /* Base style for all buttons */
             background: #222;
             color: #fff;
-            border: 1px solid #555; 
+            border: none; /* From provided button style */
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             margin: 5px; 
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            transition: background-color 0.2s ease-in-out;
         }
 
-        button:hover, .action-button:hover, .primary-action-button:hover {
+        button:hover {
             background: #e65c54; 
-            border-color: #e65c54;
         }
         
+        /* Keep specific button colors if desired, or let them all use base style */
         .download-button {
              background: #38a169; 
         }
@@ -175,6 +180,15 @@
         .print-button:hover {
             background: #0056b3;
         }
+        /* Add-button and Remove-button will use the base button style or their specific ones below */
+         .remove-button { /* Ensure it uses the specific red from before if desired */
+            background-color: #e65c54; /* More prominent red for remove */
+            font-size: 0.9em; /* Slightly smaller */
+            padding: 8px 15px;
+        }
+        .remove-button:hover {
+            background-color: #c53030;
+        }
 
 
         .list-item {
@@ -188,18 +202,6 @@
             border: 1px solid #666;
         }
 
-        .remove-button {
-            background-color: #e53e3e; 
-            color: white;
-            font-size: 0.75rem; 
-            padding: 5px 10px; 
-            border-radius: 5px;
-            border: 1px solid #c53030;
-        }
-        .remove-button:hover {
-            background-color: #c53030;
-            border-color: #c53030;
-        }
 
         #appMessages {
             position: fixed;
@@ -218,37 +220,38 @@
             color: white;
             text-align: center;
         }
-        .app-message.bg-blue-500 { background-color: #007bff; } 
-        .app-message.bg-green-500 { background-color: #28a745; } 
-        .app-message.bg-red-500 { background-color: #dc3545; } 
+        /* Using provided colors for app messages */
+        .app-message.type-info { background-color: #007bff; } 
+        .app-message.type-success { background-color: #28a745; } 
+        .app-message.type-error { background-color: #dc3545; } 
 
 
-        /* Print-specific styles */
+        /* Print-specific styles from user, slightly adapted */
         @media print {
             body {
                 background-color: #ffffff !important; 
                 color: #000000 !important;
-                font-size: 12pt;
+                font-size: 11pt; /* Adjusted for potentially better fit */
             }
             .container {
-                width: 100%;
-                max-width: none;
-                margin: 0;
-                padding: 0;
-                box-shadow: none;
-                border-radius: 0;
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
                 background: #fff !important;
             }
             .branding, 
             #appMessages, 
-            .action-button, 
+            .input-button-group button, /* Hide Add buttons */
             .remove-button, 
-            .primary-action-button, 
-            .form-file-input, 
-            #uploadFile + .primary-action-button, 
-            .input-button-group, /* Hide the whole group for add buttons */
-            #encounterPatternSection, 
-            .encounter-section:last-of-type 
+            .encounter-section:nth-of-type(1) button, /* Hides Add Hook button specifically if needed */
+            .encounter-section:nth-of-type(3) button, /* Hides Add Decision Point button */
+            .encounter-section:nth-of-type(5) button, /* Hides Add Element button */
+            .encounter-section:last-of-type, /* Hides "Manage Encounter Data" section */
+            #encounterPatternSection, /* Hide pattern selection */
+            .input-button-group input /* Hide input fields next to add buttons */
              {
                 display: none !important; 
             }
@@ -263,47 +266,51 @@
             .encounter-section h2 {
                 color: #000 !important;
                 border-bottom: 1px solid #ccc !important;
+                font-size: 1.5rem;
             }
             .form-label { color: #000 !important; }
             .form-input, .form-textarea, .form-select {
-                background-color: #f8f9fa !important;
+                background-color: #fdfdfd !important; /* Lighter for print */
                 color: #000 !important;
                 border: 1px solid #ddd !important;
+                padding: 0.5rem;
             }
-            .form-hint { color: #333 !important; }
+            .form-hint { color: #333 !important; font-size: 0.8rem; }
             .list-item {
-                background-color: #f0f0f0 !important;
-                border: 1px solid #e0e0e0 !important;
+                background-color: #f9f9f9 !important;
+                border: 1px solid #eee !important;
                 padding: 0.5rem;
                 color: #000 !important;
             }
             .list-item span { color: #000 !important; }
             .form-textarea {
-                min-height: auto;
+                min-height: auto; /* Allow it to shrink to content */
                 resize: none;
-                overflow: visible;
-                white-space: pre-wrap;
+                overflow: visible; /* Show all content */
+                white-space: pre-wrap; /* Preserve line breaks */
             }
             .form-input::placeholder, .form-textarea::placeholder {
                 color: transparent !important;
             }
             h1, .page-subtitle { color: #000 !important; }
+            h1 { font-size: 22pt; }
+            .page-subtitle { font-size: 12pt; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="branding">
-			<a href="https://www.patreon.com/DungeonBrew" target="_blank">
-				<img src="Updated Logo.png" alt="Company Logo">
-			</a>
+            <a href="https://www.patreon.com/DungeonBrew" target="_blank" rel="noopener noreferrer">
+                <img src="Updated Logo.png" alt="Dungeon Brew Logo" class="branding-logo">
+            </a>
         </div>
         <h1>RPG Encounter Builder</h1>
         <p class="page-subtitle">Craft compelling scenes for your adventures.</p>
 
         <div id="appMessages"></div>
 
-        <form id="encounterForm" class="space-y-8">
+        <form id="encounterForm">
 
             <section id="encounterPatternSection" class="encounter-section">
                 <h2>0. Select Encounter Pattern (Optional)</h2>
@@ -311,7 +318,7 @@
                     <label for="encounterPatternSelect" class="form-label">Choose a pattern:</label>
                     <select id="encounterPatternSelect" class="form-select">
                         </select>
-                    <p id="patternDescriptionDisplay" class="form-hint mt-2 italic"></p>
+                    <p id="patternDescriptionDisplay" class="form-hint italic"></p>
                 </div>
             </section>
 
@@ -329,12 +336,12 @@
                 </div>
                 <div>
                     <label class="form-label">Hooks / Calls to Action:</label>
-                    <div id="hooksListContainer" class="space-y-2 mb-2"></div>
+                    <div id="hooksListContainer"></div>
                     <div class="input-button-group">
                         <input type="text" id="newHookInput" class="form-input" placeholder="Enter hook text (e.g., A desperate messenger arrives...)">
-                        <button type="button" onclick="addListItemFromInput('hooksListContainer', 'newHookInput')" class="action-button add-button">Add Hook</button>
+                        <button type="button" onclick="addListItemFromInput('hooksListContainer', 'newHookInput')">Add Hook</button>
                     </div>
-                    <p class="form-hint mt-2" id="hooksHint">How is the dramatic question presented? Aim for multiple hooks appealing to different motivations (Good, Neutral, Evil, Personal). Note any urgency.</p>
+                    <p class="form-hint" id="hooksHint">How is the dramatic question presented? Aim for multiple hooks appealing to different motivations (Good, Neutral, Evil, Personal). Note any urgency.</p>
                 </div>
                  <div>
                     <label for="encounterType" class="form-label">Encounter Type:</label>
@@ -366,12 +373,12 @@
                 <h2>3. Player Agency & Decision Points</h2>
                 <div>
                     <label class="form-label">Meaningful Decision Points:</label>
-                    <div id="decisionPointsContainer" class="space-y-2 mb-2"></div>
+                    <div id="decisionPointsContainer"></div>
                     <div class="input-button-group">
                         <input type="text" id="newDecisionPointInput" class="form-input" placeholder="e.g., Which path to take? Who to trust? To fight or negotiate?">
-                        <button type="button" onclick="addListItemFromInput('decisionPointsContainer', 'newDecisionPointInput')" class="action-button add-button">Add Decision Point</button>
+                        <button type="button" onclick="addListItemFromInput('decisionPointsContainer', 'newDecisionPointInput')">Add Decision Point</button>
                     </div>
-                    <p class="form-hint mt-2" id="decisionPointsHint">Brainstorm how players resolve conflicts or which conflicts they address. Avoid single obvious paths.</p>
+                    <p class="form-hint" id="decisionPointsHint">Brainstorm how players resolve conflicts or which conflicts they address. Avoid single obvious paths.</p>
                 </div>
                 <div>
                     <label for="victoryPaths" class="form-label">Multiple Ways to Achieve Victory:</label>
@@ -413,12 +420,12 @@
                 </div>
                 <div>
                     <label class="form-label">Interactive Environmental Elements:</label>
-                    <div id="interactiveElementsContainer" class="space-y-2 mb-2"></div>
+                    <div id="interactiveElementsContainer"></div>
                     <div class="input-button-group">
                         <input type="text" id="newInteractiveElementInput" class="form-input" placeholder="e.g., Lever, cover, climbable wall, unstable floor, magical font">
-                        <button type="button" onclick="addListItemFromInput('interactiveElementsContainer', 'newInteractiveElementInput')" class="action-button add-button">Add Element</button>
+                        <button type="button" onclick="addListItemFromInput('interactiveElementsContainer', 'newInteractiveElementInput')">Add Element</button>
                     </div>
-                    <p class="form-hint mt-2" id="interactiveElementsHint">Identify elements that create tactical opportunities and make the scene "toyetic". Consider how these elements reflect the history, creators, or current inhabitants of this location and their goals. How do they reinforce the atmosphere?</p>
+                    <p class="form-hint" id="interactiveElementsHint">Identify elements that create tactical opportunities and make the scene "toyetic". Consider how these elements reflect the history, creators, or current inhabitants of this location and their goals. How do they reinforce the atmosphere?</p>
                 </div>
             </section>
 
@@ -454,26 +461,26 @@
                     <p class="form-hint" id="leftHooksHint">What unexpected developments could arise?</p>
                 </div>
             </section>
+        
+            <section class="encounter-section">
+                <h2>8. Manage Encounter Data</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label for="uploadFile" class="form-label">Upload Encounter File (JSON):</label>
+                    <input type="file" id="uploadFile" accept=".json" class="form-file-input">
+                    <button type="button" onclick="loadEncounterFromFile()" class="upload-button" style="width:100%; margin-top:0.5rem;">Upload and Populate Form</button>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <button type="button" onclick="downloadEncounterData()" class="download-button" style="width:100%;">
+                        Download Encounter as JSON
+                    </button>
+                </div>
+                <div>
+                    <button type="button" onclick="triggerPrint()" class="print-button" style="width:100%;">
+                        Print Encounter
+                    </button>
+                </div>
+            </section>
         </form>
-
-        <section class="encounter-section">
-            <h2>8. Manage Encounter Data</h2>
-            <div class="mb-4">
-                <label for="uploadFile" class="form-label">Upload Encounter File (JSON):</label>
-                <input type="file" id="uploadFile" accept=".json" class="form-file-input">
-                <button type="button" onclick="loadEncounterFromFile()" class="primary-action-button upload-button mt-2">Upload and Populate Form</button>
-            </div>
-            <div class="mb-4">
-                <button type="button" onclick="downloadEncounterData()" class="primary-action-button download-button">
-                    Download Encounter as JSON
-                </button>
-            </div>
-            <div>
-                <button type="button" onclick="triggerPrint()" class="primary-action-button print-button">
-                    Print Encounter
-                </button>
-            </div>
-        </section>
     </div> 
     <script>
         // --- Encounter Pattern Definitions ---
@@ -621,15 +628,8 @@
             const messagesContainer = document.getElementById('appMessages');
             const messageDiv = document.createElement('div');
             messageDiv.textContent = message;
-            let bgColorClass = 'bg-blue-500'; 
-            if (type === 'success') bgColorClass = 'bg-green-500'; 
-            if (type === 'error') bgColorClass = 'bg-red-500'; 
-            
-            if (type === 'success') messageDiv.classList.add('bg-green-500');
-            else if (type === 'error') messageDiv.classList.add('bg-red-500');
-            else messageDiv.classList.add('bg-blue-500'); 
-
-            messageDiv.className = `app-message ${bgColorClass}`; 
+            // Using type to add a class for styling
+            messageDiv.className = `app-message type-${type}`; // e.g., app-message type-success
             
             messagesContainer.appendChild(messageDiv);
             setTimeout(() => {
@@ -923,8 +923,15 @@
                  }
             }
 
-            const buttons = document.querySelectorAll('button, [role="button"]');
-            buttons.forEach(button => button.setAttribute('tabindex', '0')); 
+            const buttons = document.querySelectorAll('button'); // Target all buttons for consistent styling if needed
+            buttons.forEach(button => {
+                button.setAttribute('tabindex', '0'); 
+                // Check if it's an add button and apply specific class if not already done by HTML
+                // This is more for ensuring consistency if classes were missed in HTML
+                if (button.textContent.startsWith("Add ")) {
+                    button.classList.add("add-button"); 
+                }
+            }); 
         });
 
     </script>
