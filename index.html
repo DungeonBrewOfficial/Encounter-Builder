@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encounter Builder</title>
+    <style>
+        /* CSS styles provided by the user, with adaptations for the Encounter Builder */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0; 
+            background: #1e1e1e;
+            color: #f5f5f5;
+            overflow-y: auto; 
+        }
+
+        .container {
+            background: #333; 
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px; 
+            padding: 20px;
+            margin: 20px auto; 
+        }
+
+        .branding {
+            text-align: center;
+            margin-bottom: 20px; 
+        }
+
+        .branding-logo {
+            max-width: 150px; 
+            height: auto; 
+            display: inline-block; 
+            margin: 0 auto; 
+            border: 2px solid #ffdd57; 
+            border-radius: 4px; 
+        }
+
+        h1 { 
+            font-size: 28px; 
+            margin-bottom: 10px; 
+            color: #ffdd57;
+            text-align: center;
+        }
+        .page-subtitle { 
+            font-size: 16px;
+            color: #f5f5f5;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .encounter-section {
+            background: #444; 
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left; 
+        }
+
+        .encounter-section h2 {
+            font-size: 1.75rem; 
+            font-weight: 600;
+            color: #ffdd57; 
+            margin-top: 0; 
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #555;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500; 
+            color: #f5f5f5; 
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background-color: #2a2a2a; 
+            color: #f5f5f5;
+            border: 1px solid #555; 
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-bottom: 1rem; /* Default margin, will be overridden in input-button-group */
+            box-sizing: border-box; 
+        }
+        
+        .form-file-input { 
+            width: 100%;
+            background-color: #2a2a2a;
+            color: #f5f5f5;
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 0.5rem; 
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus, .form-file-input:focus {
+            outline: none;
+            border-color: #ffdd57; 
+            box-shadow: 0 0 0 2px rgba(255, 221, 87, 0.5);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 0.875rem;
+            color: #aaa; 
+            margin-top: -0.5rem; 
+            margin-bottom: 1rem;
+        }
+        .form-hint.italic { 
+            font-style: italic;
+        }
+
+        /* Input and Add Button Grouping */
+        .input-button-group {
+            display: flex;
+            align-items: center; /* Vertically align input and button */
+            margin-bottom: 1rem; /* MODIFIED: Increased space below the group before the hint */
+        }
+        .input-button-group .form-input {
+            flex-grow: 1; /* Input takes available space */
+            margin-bottom: 0; /* Remove bottom margin from input inside group */
+            margin-right: 10px; /* Space between input and button */
+        }
+        .input-button-group .action-button.add-button {
+            flex-shrink: 0; /* Prevent button from shrinking */
+            margin: 0; /* Reset margin for button in group */
+        }
+
+
+        /* Button styling */
+        button, .action-button, .primary-action-button {
+            background: #222;
+            color: #fff;
+            border: 1px solid #555; 
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px; 
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+
+        button:hover, .action-button:hover, .primary-action-button:hover {
+            background: #e65c54; 
+            border-color: #e65c54;
+        }
+        
+        .download-button {
+             background: #38a169; 
+        }
+        .download-button:hover {
+            background: #2f855a;
+        }
+        .upload-button {
+            background: #dd6b20; 
+        }
+        .upload-button:hover {
+            background: #c05621;
+        }
+        .print-button {
+            background: #007bff; 
+        }
+        .print-button:hover {
+            background: #0056b3;
+        }
+
+
+        .list-item {
+            background-color: #505050; 
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #666;
+        }
+
+        .remove-button {
+            background-color: #e53e3e; 
+            color: white;
+            font-size: 0.75rem; 
+            padding: 5px 10px; 
+            border-radius: 5px;
+            border: 1px solid #c53030;
+        }
+        .remove-button:hover {
+            background-color: #c53030;
+            border-color: #c53030;
+        }
+
+        #appMessages {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000; 
+            width: 300px;
+        }
+        .app-message {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            color: white;
+            text-align: center;
+        }
+        .app-message.bg-blue-500 { background-color: #007bff; } 
+        .app-message.bg-green-500 { background-color: #28a745; } 
+        .app-message.bg-red-500 { background-color: #dc3545; } 
+
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #ffffff !important; 
+                color: #000000 !important;
+                font-size: 12pt;
+            }
+            .container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
+                background: #fff !important;
+            }
+            .branding, 
+            #appMessages, 
+            .action-button, 
+            .remove-button, 
+            .primary-action-button, 
+            .form-file-input, 
+            #uploadFile + .primary-action-button, 
+            .input-button-group, /* Hide the whole group for add buttons */
+            #encounterPatternSection, 
+            .encounter-section:last-of-type 
+             {
+                display: none !important; 
+            }
+            .encounter-section {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                page-break-inside: avoid;
+                background: #fff !important;
+            }
+            .encounter-section h2 {
+                color: #000 !important;
+                border-bottom: 1px solid #ccc !important;
+            }
+            .form-label { color: #000 !important; }
+            .form-input, .form-textarea, .form-select {
+                background-color: #f8f9fa !important;
+                color: #000 !important;
+                border: 1px solid #ddd !important;
+            }
+            .form-hint { color: #333 !important; }
+            .list-item {
+                background-color: #f0f0f0 !important;
+                border: 1px solid #e0e0e0 !important;
+                padding: 0.5rem;
+                color: #000 !important;
+            }
+            .list-item span { color: #000 !important; }
+            .form-textarea {
+                min-height: auto;
+                resize: none;
+                overflow: visible;
+                white-space: pre-wrap;
+            }
+            .form-input::placeholder, .form-textarea::placeholder {
+                color: transparent !important;
+            }
+            h1, .page-subtitle { color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="branding">
+            <a href="https://www.patreon.com/yourusernameplaceholder" target="_blank" rel="noopener noreferrer">
+                <img src="https://placehold.co/150x150/ffdd57/1e1e1e?text=LOGO" alt="Site Logo" class="branding-logo">
+            </a>
+        </div>
+        <h1>RPG Encounter Builder</h1>
+        <p class="page-subtitle">Craft compelling scenes for your adventures.</p>
+
+        <div id="appMessages"></div>
+
+        <form id="encounterForm" class="space-y-8">
+
+            <section id="encounterPatternSection" class="encounter-section">
+                <h2>0. Select Encounter Pattern (Optional)</h2>
+                <div>
+                    <label for="encounterPatternSelect" class="form-label">Choose a pattern:</label>
+                    <select id="encounterPatternSelect" class="form-select">
+                        </select>
+                    <p id="patternDescriptionDisplay" class="form-hint mt-2 italic"></p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>1. Core Encounter Definition</h2>
+                <div>
+                    <label for="seed" class="form-label">Seed / Core Idea:</label>
+                    <input type="text" id="seed" name="seed" class="form-input" placeholder="e.g., A talking statue, a sudden ambush, a mysterious ritual">
+                    <p class="form-hint" id="seedHint">What's the central concept? (Monster, location, narrative idea)</p>
+                </div>
+                <div>
+                    <label for="dramaticQuestion" class="form-label">Dramatic Question:</label>
+                    <input type="text" id="dramaticQuestion" name="dramaticQuestion" class="form-input" placeholder="e.g., Can the heroes recover the stolen artifact before it's too late?">
+                    <p class="form-hint" id="dramaticQuestionHint">What are the players trying to accomplish and why should they care?</p>
+                </div>
+                <div>
+                    <label class="form-label">Hooks / Calls to Action:</label>
+                    <div id="hooksListContainer" class="space-y-2 mb-2"></div>
+                    <div class="input-button-group">
+                        <input type="text" id="newHookInput" class="form-input" placeholder="Enter hook text (e.g., A desperate messenger arrives...)">
+                        <button type="button" onclick="addListItemFromInput('hooksListContainer', 'newHookInput')" class="action-button add-button">Add Hook</button>
+                    </div>
+                    <p class="form-hint mt-2" id="hooksHint">How is the dramatic question presented? Aim for multiple hooks appealing to different motivations (Good, Neutral, Evil, Personal). Note any urgency.</p>
+                </div>
+                 <div>
+                    <label for="encounterType" class="form-label">Encounter Type:</label>
+                    <input type="text" id="encounterType" name="encounterType" class="form-input" placeholder="e.g., Combat, Social, Exploration, Puzzle, Skill Challenge, Hazard.">
+                    <p class="form-hint" id="encounterTypeHint">This is a scene presenting a conflict or tense sequence needing resolution, not just combat.</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>2. Conflict and Motivation Planning</h2>
+                <div>
+                    <label for="primaryConflict" class="form-label">Primary Source of Conflict:</label>
+                    <input type="text" id="primaryConflict" name="primaryConflict" class="form-input" placeholder="e.g., Greedy bandits, a territorial beast, a magical curse">
+                    <p class="form-hint" id="primaryConflictHint">Identify the main opposing force or challenge.</p>
+                </div>
+                <div>
+                    <label for="conflictOpposition" class="form-label">Why it Opposes PCs:</label>
+                    <textarea id="conflictOpposition" name="conflictOpposition" class="form-textarea" placeholder="e.g., PCs have something they want, PCs are trespassing, PCs disrupt their plans."></textarea>
+                    <p class="form-hint" id="conflictOppositionHint">Explain the direct reason for opposition.</p>
+                </div>
+                <div>
+                    <label for="npcMotivation" class="form-label">NPC/Creature/Faction Motivations & Goals:</label>
+                    <textarea id="npcMotivation" name="npcMotivation" class="form-textarea" placeholder="Detail their goals. This is key for non-violent solutions and reactions. What's their 'lever'?"></textarea>
+                    <p class="form-hint" id="npcMotivationHint">Plan this from the beginning. It enables non-violent solutions and influences reactions. How do their actions and presence reinforce the encounter's atmosphere and the location's story?</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>3. Player Agency & Decision Points</h2>
+                <div>
+                    <label class="form-label">Meaningful Decision Points:</label>
+                    <div id="decisionPointsContainer" class="space-y-2 mb-2"></div>
+                    <div class="input-button-group">
+                        <input type="text" id="newDecisionPointInput" class="form-input" placeholder="e.g., Which path to take? Who to trust? To fight or negotiate?">
+                        <button type="button" onclick="addListItemFromInput('decisionPointsContainer', 'newDecisionPointInput')" class="action-button add-button">Add Decision Point</button>
+                    </div>
+                    <p class="form-hint mt-2" id="decisionPointsHint">Brainstorm how players resolve conflicts or which conflicts they address. Avoid single obvious paths.</p>
+                </div>
+                <div>
+                    <label for="victoryPaths" class="form-label">Multiple Ways to Achieve Victory:</label>
+                    <textarea id="victoryPaths" name="victoryPaths" class="form-textarea" placeholder="Describe different success scenarios beyond just defeating enemies (e.g., clever use of skills, negotiation, achieving a secondary objective)."></textarea>
+                    <p class="form-hint" id="victoryPathsHint">Move beyond simple survival or enemy defeat. A lack of decision points makes an encounter boring.</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>4. Dynamic Objectives & Consequences</h2>
+                <div>
+                    <label for="playerObjectives" class="form-label">Player Objectives:</label>
+                    <textarea id="playerObjectives" name="playerObjectives" class="form-textarea" placeholder="e.g., Capture an object, reach a location, protect an NPC, escape."></textarea>
+                    <p class="form-hint" id="playerObjectivesHint">Define objectives beyond just defeating the opposition. This makes encounters less of an "HP race".</p>
+                </div>
+                <div>
+                    <label for="oppositionObjectives" class="form-label">Opposition Objectives:</label>
+                    <textarea id="oppositionObjectives" name="oppositionObjectives" class="form-textarea" placeholder="e.g., Steal the artifact, prevent escape, complete a ritual."></textarea>
+                    <p class="form-hint" id="oppositionObjectivesHint">What are the goals of the opposing forces?</p>
+                </div>
+                <div>
+                    <label for="consequences" class="form-label">Consequences:</label>
+                    <textarea id="consequences" name="consequences" class="form-textarea" placeholder="What happens if the encounter is ignored? What are the results of player interaction/choices?"></textarea>
+                    <p class="form-hint" id="consequencesHint">Player choices should have impact. Consider a spectrum of outcomes based on player success, partial success, failure, or specific choices made during the encounter.</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>5. Environment and Tactical Interaction</h2>
+                <div>
+                    <label for="environmentDescription" class="form-label">Environment Description:</label>
+                    <textarea id="environmentDescription" name="environmentDescription" class="form-textarea" placeholder="Describe the setting in detail (e.g., crumbling ruins, dense forest, opulent ballroom)."></textarea>
+                    <p class="form-hint" id="environmentDescriptionHint">Detail the visual, auditory, and other sensory aspects of the location.</p>
+                </div>
+                <div>
+                    <label for="atmosphereMood" class="form-label">Atmosphere / Mood:</label>
+                    <textarea id="atmosphereMood" name="atmosphereMood" class="form-textarea" placeholder="e.g., Oppressive and chilling, with echoing drips and a faint smell of decay."></textarea>
+                    <p class="form-hint" id="atmosphereMoodHint">Describe the sensory details and overall feeling you want to evoke for this encounter.</p>
+                </div>
+                <div>
+                    <label class="form-label">Interactive Environmental Elements:</label>
+                    <div id="interactiveElementsContainer" class="space-y-2 mb-2"></div>
+                    <div class="input-button-group">
+                        <input type="text" id="newInteractiveElementInput" class="form-input" placeholder="e.g., Lever, cover, climbable wall, unstable floor, magical font">
+                        <button type="button" onclick="addListItemFromInput('interactiveElementsContainer', 'newInteractiveElementInput')" class="action-button add-button">Add Element</button>
+                    </div>
+                    <p class="form-hint mt-2" id="interactiveElementsHint">Identify elements that create tactical opportunities and make the scene "toyetic". Consider how these elements reflect the history, creators, or current inhabitants of this location and their goals. How do they reinforce the atmosphere?</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>6. Flow, Pacing, and Resolution</h2>
+                <div>
+                    <label for="emotionalIntensity" class="form-label">Desired Emotional Intensity / Pacing Goal:</label>
+                    <input type="text" id="emotionalIntensity" name="emotionalIntensity" class="form-input" placeholder="e.g., Fast and frantic, slow burn tension, investigative, triumphant.">
+                    <p class="form-hint" id="emotionalIntensityHint">How does this encounter fit into the larger adventure's pacing?</p>
+                </div>
+                <div>
+                    <label for="endConditions" class="form-label">End Conditions:</label>
+                    <textarea id="endConditions" name="endConditions" class="form-textarea" placeholder="Define clear end conditions (e.g., enemies flee at 50% HP, objective achieved, specific information revealed, a timer runs out)."></textarea>
+                    <p class="form-hint" id="endConditionsHint">Helps maintain a brisk pace and prevent the encounter from overstaying its welcome. Support non-obvious outcomes.</p>
+                </div>
+            </section>
+
+            <section class="encounter-section">
+                <h2>7. Narrative Integration</h2>
+                <div>
+                    <label for="narrativeLinks" class="form-label">Links to Campaign Notes:</label>
+                    <textarea id="narrativeLinks" name="narrativeLinks" class="form-textarea" placeholder="Connect to plot threads, world locations, significant NPCs (e.g., 'Relates to the Cult of the Serpent plot', 'Happens in the Whispering Woods', 'Involves Baron Von Hessler')."></textarea>
+                    <p class="form-hint" id="narrativeLinksHint">Conceptually, this could link to other documents or notes within a larger GM toolkit.</p>
+                </div>
+                <div>
+                    <label for="largerSituation" class="form-label">Part of a Larger, Moving Situation:</label>
+                    <textarea id="largerSituation" name="largerSituation" class="form-textarea" placeholder="How does this encounter reflect or influence ongoing events in the campaign world?"></textarea>
+                    <p class="form-hint" id="largerSituationHint">Place the encounter within the broader campaign context.</p>
+                </div>
+                <div>
+                    <label for="leftHooks" class="form-label">Potential "Left Hooks" / Plot Points:</label>
+                    <textarea id="leftHooks" name="leftHooks" class="form-textarea" placeholder="e.g., Twists that force PCs to reconsider plans, raise the stakes, reveal crucial information, or introduce unexpected complications."></textarea>
+                    <p class="form-hint" id="leftHooksHint">What unexpected developments could arise?</p>
+                </div>
+            </section>
+        </form>
+
+        <section class="encounter-section">
+            <h2>8. Manage Encounter Data</h2>
+            <div class="mb-4">
+                <label for="uploadFile" class="form-label">Upload Encounter File (JSON):</label>
+                <input type="file" id="uploadFile" accept=".json" class="form-file-input">
+                <button type="button" onclick="loadEncounterFromFile()" class="primary-action-button upload-button mt-2">Upload and Populate Form</button>
+            </div>
+            <div class="mb-4">
+                <button type="button" onclick="downloadEncounterData()" class="primary-action-button download-button">
+                    Download Encounter as JSON
+                </button>
+            </div>
+            <div>
+                <button type="button" onclick="triggerPrint()" class="primary-action-button print-button">
+                    Print Encounter
+                </button>
+            </div>
+        </section>
+    </div> 
+    <script>
+        // --- Encounter Pattern Definitions ---
+        const encounterPatterns = [
+            {
+                id: "blank_slate",
+                name: "-- Select a Pattern (or Blank Slate) --",
+                description: "Start with a completely empty encounter form. Clears pattern-specific fields and resets hints.",
+                pre_populated_fields: { 
+                    playerObjectives: "",
+                    oppositionObjectives: "",
+                    encounterType: ""
+                },
+                specific_prompts: {} 
+            },
+            {
+                id: "escort_protect",
+                name: "Escort / Protect",
+                description: "Players must guide or defend a target (NPC, item, information) to a specific location or for a set duration, facing opposition.",
+                pre_populated_fields: {
+                    encounterType: "Escort, Protection, Defense",
+                    playerObjectives: "Safely escort the [TARGET/ITEM] to [DESTINATION] OR Protect the [TARGET/ITEM] for [DURATION/EVENT].",
+                    oppositionObjectives: "Prevent the [TARGET/ITEM] from reaching [DESTINATION] OR Capture/Destroy/Steal the [TARGET/ITEM]."
+                },
+                specific_prompts: {
+                    decisionPointsHint: "What choices can players make regarding the route, pace, defensive formations, or use of resources for the escort/protection?",
+                    interactiveElementsHint: "What environmental features could offer protection, create hazards, or be used strategically by either side during the escort?",
+                    endConditionsHint: "Besides reaching the destination/surviving the duration, what other ways might the escort conclude (e.g., target captured, all threats neutralized, a negotiated settlement)? Consider partial successes."
+                }
+            },
+            {
+                id: "chase_race",
+                name: "Chase / Race",
+                description: "Players are pursuing a fleeing target, being pursued themselves, or racing against an opponent to a common objective or location.",
+                pre_populated_fields: {
+                    encounterType: "Chase, Pursuit, Race",
+                    playerObjectives: "Catch the [QUARRY] OR Escape from the [PURSUER] OR Reach [FINISH_LINE/OBJECTIVE] before the opposition.",
+                    oppositionObjectives: "Evade capture OR Catch the [TARGETS] OR Reach [FINISH_LINE/OBJECTIVE] first."
+                },
+                specific_prompts: {
+                    environmentDescriptionHint: "Describe distinct 'scenes' or segments of the chase. What are the key locations, terrains, and transitions? How does the environment change?",
+                    interactiveElementsHint: "What obstacles must be overcome by participants? Are there opportunities to gain/lose ground, create shortcuts, or hinder opponents using the environment?",
+                    consequencesHint: "What are the stakes? What happens if the quarry escapes or is caught? What if the players win/lose the race? Are there consequences for how the chase is conducted (e.g., collateral damage)?"
+                }
+            },
+            {
+                id: "defense_holdout",
+                name: "Defense / Holdout",
+                description: "Players must defend a static location, object, or group of NPCs against waves of attackers or a sustained assault for a specific duration or until a condition is met.",
+                pre_populated_fields: {
+                    encounterType: "Defense, Holdout, Siege",
+                    playerObjectives: "Defend [LOCATION/TARGET] for [DURATION/NUMBER OF WAVES] OR Repel all attackers OR Survive until [RELIEF_ARRIVES/OBJECTIVE_COMPLETED].",
+                    oppositionObjectives: "Breach the defenses and capture/destroy [LOCATION/TARGET] OR Overwhelm the defenders."
+                },
+                specific_prompts: {
+                    environmentDescriptionHint: "Describe the defensible location. What are its strengths and weaknesses? Where are the chokepoints, entryways, and vulnerable areas?",
+                    interactiveElementsHint: "What fortifications exist or can be made? Are there traps, barricades, or environmental hazards that can be used by defenders or attackers?",
+                    npcMotivationHint: "If there are attackers, what are their waves or phases? Do they have special units or tactics? What is the motivation of the attackers beyond just destruction?"
+                }
+            },
+            {
+                id: "exploration_investigation",
+                name: "Exploration / Investigation",
+                description: "Players explore a new area to uncover information, find a specific item/person, or solve a mystery. Emphasis on discovery, puzzles, and information gathering.",
+                pre_populated_fields: {
+                    encounterType: "Exploration, Investigation, Discovery, Puzzle",
+                    playerObjectives: "Discover the [SECRET/TRUTH/LOCATION] OR Find [ITEM/PERSON/CLUE] OR Map out the [AREA] OR Solve the [MYSTERY/PUZZLE].",
+                    oppositionObjectives: "Protect the [SECRET] OR Prevent access to [AREA/INFORMATION] OR Misdirect/Deceive the investigators." 
+                },
+                specific_prompts: {
+                    hooksHint: "How do players learn about this place or mystery? What clues or rumors draw them in? Is there a specific question they are trying to answer?",
+                    decisionPointsHint: "What paths can they explore? What clues require interpretation? Are there red herrings? What tools or skills are key to uncovering information?",
+                    interactiveElementsHint: "What objects, texts, mechanisms, or environmental features hold clues or require interaction to progress? Are there puzzles to solve or hidden details to find?"
+                }
+            },
+            { 
+                id: "negotiation_interrogation",
+                name: "Negotiation / Interrogation",
+                description: "Players engage in a social encounter to gain information, make a deal, persuade, or intimidate NPCs.",
+                pre_populated_fields: {
+                    encounterType: "Social, Negotiation, Interrogation, Parley, Diplomacy",
+                    playerObjectives: "Gain [SPECIFIC INFORMATION/ITEM/CONCESSION] from [NPC/GROUP] OR Persuade [NPC/GROUP] to [TAKE A SPECIFIC ACTION/CHANGE STANCE].",
+                    oppositionObjectives: "Withhold [INFORMATION/ITEM/CONCESSION] OR Maintain current [STANCE/PLAN] OR Deceive/Mislead the PCs OR Gain a concession from the PCs."
+                },
+                specific_prompts: {
+                    npcMotivationHint: "What are the NPC's core desires, fears, loyalties, and secrets? What leverage do they have, or what leverage can the PCs discover/use? What is their initial disposition towards the PCs?",
+                    decisionPointsHint: "What are the key arguments, questions, or points of contention? Are there social skill checks (Persuasion, Intimidation, Deception, Insight), offers, threats, or emotional appeals involved? What are the NPC's potential breaking points or deal-sweeteners?",
+                    consequencesHint: "What happens if negotiations succeed or fail? Does a failed negotiation lead to another type of encounter (e.g., combat, chase)? Are there long-term social, factional, or reputational repercussions?"
+                }
+            },
+            { 
+                id: "infiltration_assassination",
+                name: "Infiltration / Assassination",
+                description: "Players must stealthily enter a guarded location to achieve an objective (e.g., steal an item, gather intel, sabotage, or eliminate a target) and possibly escape.",
+                pre_populated_fields: {
+                    encounterType: "Infiltration, Stealth, Assassination, Sabotage, Heist",
+                    playerObjectives: "Infiltrate [LOCATION] undetected. Achieve [PRIMARY_OBJECTIVE: e.g., Steal the MacGuffin, Eliminate Target X, Plant false information, Sabotage the war machine]. Escape [LOCATION] (optional: without raising alarm).",
+                    oppositionObjectives: "Prevent unauthorized access to [LOCATION]. Protect [TARGET/ASSET]. Detect and neutralize intruders."
+                },
+                specific_prompts: {
+                    environmentDescriptionHint: "Detail the layers of security: patrols, static guards, observation points, alarms, locks, magical wards. What are the blind spots or less-guarded routes?",
+                    interactiveElementsHint: "What interactive elements aid or hinder infiltration (e.g., shadows, noise-making debris, alarm triggers, keycard readers, disguise opportunities, secret passages, guard schedules)?",
+                    decisionPointsHint: "What are the critical choices during infiltration (e.g., timing, route, distraction vs. avoidance, lethal vs. non-lethal takedowns, when/if to break stealth)? What are the contingency plans if detected?",
+                    consequencesHint: "What happens if they are detected early, mid-mission, or during escape? What are the consequences of achieving the objective but being caught vs. failing but escaping?"
+                }
+            },
+            { 
+                id: "puzzle_obstacle_course",
+                name: "Puzzle / Obstacle Course",
+                description: "Players must overcome a series of interconnected puzzles, environmental challenges, or skill-based tests to progress or achieve a goal. May or may not involve direct combat.",
+                pre_populated_fields: {
+                    encounterType: "Puzzle, Obstacle Course, Skill Challenge, Trap Gauntlet",
+                    playerObjectives: "Navigate the [CHALLENGE_AREA/GAUNTLET]. Solve the [CENTRAL_PUZZLE/SERIES_OF_PUZZLES]. Reach the [END_POINT/REWARD].",
+                    oppositionObjectives: "(Often passive) The environment/puzzles themselves act as opposition. OR: A guardian/entity tests the players. OR: Another team is competing."
+                },
+                specific_prompts: {
+                    environmentDescriptionHint: "Describe the layout of the course/puzzle area. How do different sections connect? What is the theme or nature of the challenges (e.g., ancient, magical, technological)?",
+                    interactiveElementsHint: "Detail the specific puzzle mechanisms, traps, levers, pressure plates, riddles, clues, or physical obstacles. How do they interact? Are there red herrings?",
+                    decisionPointsHint: "What skills or knowledge are required for each challenge? Are there multiple solutions or approaches? What are the consequences of incorrect attempts or failures at a specific stage?",
+                    victoryPathsHint: "Beyond simply completing it, are there ways to complete it faster, more elegantly, or with bonus rewards/discoveries?"
+                }
+            },
+            { 
+                id: "gauntlet_escape",
+                name: "Gauntlet / Escape",
+                description: "Players must fight or navigate their way through a series of hostile encounters or hazardous zones to escape a dangerous location or reach a point of safety, often under pressure.",
+                pre_populated_fields: {
+                    encounterType: "Gauntlet, Escape, Running Battle, Hazardous Journey",
+                    playerObjectives: "Escape from [DANGEROUS_LOCATION/PRISON]. Reach [SAFE_POINT/EXTRACTION_ZONE]. Survive the onslaught.",
+                    oppositionObjectives: "Prevent escape. Recapture or eliminate the targets. Wear down the players' resources."
+                },
+                specific_prompts: {
+                    environmentDescriptionHint: "Describe the series of zones or areas players must pass through. How do they differ? Are there chokepoints, open areas, or places to briefly rest/hide?",
+                    interactiveElementsHint: "What hazards, traps, or environmental features exist in each zone? Are there limited resources (e.g., cover, healing items) players might find or fight over?",
+                    npcMotivationHint: "What types of enemies or challenges are present in each stage of the gauntlet? Do they escalate in difficulty or change tactics? Is there a persistent pursuer?",
+                    endConditionsHint: "What defines a successful escape? Is it just reaching a point, or must certain conditions be met (e.g., with a specific item, with a certain number of survivors)?"
+                }
+            }
+        ];
+
+        const originalHints = {};
+        let lastConfirmedPatternId = "blank_slate"; 
+
+        function showAppMessage(message, type = 'info') {
+            const messagesContainer = document.getElementById('appMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            let bgColorClass = 'bg-blue-500'; 
+            if (type === 'success') bgColorClass = 'bg-green-500'; 
+            if (type === 'error') bgColorClass = 'bg-red-500'; 
+            
+            if (type === 'success') messageDiv.classList.add('bg-green-500');
+            else if (type === 'error') messageDiv.classList.add('bg-red-500');
+            else messageDiv.classList.add('bg-blue-500'); 
+
+            messageDiv.className = `app-message ${bgColorClass}`; 
+            
+            messagesContainer.appendChild(messageDiv);
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 600); 
+            }, 3000); 
+        }
+
+        function renderListItem(containerId, itemText) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`Container with ID ${containerId} not found.`);
+                showAppMessage(`Error: List container '${containerId}' not found.`, 'error');
+                return;
+            }
+            const listItem = document.createElement('div');
+            listItem.className = 'list-item';
+            const textSpan = document.createElement('span');
+            textSpan.textContent = itemText;
+            listItem.appendChild(textSpan);
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button'; 
+            removeButton.textContent = 'Remove';
+            removeButton.type = 'button'; 
+            removeButton.onclick = function() { container.removeChild(listItem); };
+            listItem.appendChild(removeButton);
+            container.appendChild(listItem);
+        }
+
+        function addListItemFromInput(containerId, inputId) {
+            const inputField = document.getElementById(inputId);
+            const itemText = inputField.value.trim();
+            if (itemText === "") {
+                showAppMessage("Please enter some text for the item.", "error");
+                return;
+            }
+            renderListItem(containerId, itemText);
+            inputField.value = ''; 
+        }
+        
+        function populatePatternSelector() {
+            const selector = document.getElementById('encounterPatternSelect');
+            selector.innerHTML = ''; 
+            encounterPatterns.forEach(pattern => {
+                const option = document.createElement('option');
+                option.value = pattern.id;
+                option.textContent = pattern.name;
+                selector.appendChild(option);
+            });
+            selector.value = lastConfirmedPatternId; 
+            selector.addEventListener('change', handlePatternSelection);
+        }
+
+        function storeOriginalHints() {
+            const hintElements = document.querySelectorAll('.form-hint[id]');
+            hintElements.forEach(hintEl => {
+                if (hintEl.id) {
+                    originalHints[hintEl.id] = hintEl.textContent;
+                }
+            });
+        }
+        
+        function resetToBlankSlate() {
+            const blankSlatePattern = encounterPatterns.find(p => p.id === "blank_slate");
+            if (!blankSlatePattern) return;
+
+            if (blankSlatePattern.pre_populated_fields) {
+                for (const fieldId in blankSlatePattern.pre_populated_fields) {
+                    const element = document.getElementById(fieldId);
+                    if (element) {
+                        element.value = blankSlatePattern.pre_populated_fields[fieldId];
+                    }
+                }
+            }
+            for (const hintId in originalHints) {
+                const hintElement = document.getElementById(hintId);
+                if (hintElement) {
+                    hintElement.textContent = originalHints[hintId];
+                }
+            }
+            document.getElementById('patternDescriptionDisplay').textContent = blankSlatePattern.description;
+        }
+
+        function handlePatternSelection(event) {
+            const selectElement = event.target;
+            const newlySelectedPatternId = selectElement.value;
+            const pattern = encounterPatterns.find(p => p.id === newlySelectedPatternId);
+
+            if (!pattern) {
+                console.error("Selected pattern ID not found in definitions:", newlySelectedPatternId);
+                selectElement.value = lastConfirmedPatternId; 
+                const lastPatternObject = encounterPatterns.find(p => p.id === lastConfirmedPatternId);
+                if (lastPatternObject) {
+                    document.getElementById('patternDescriptionDisplay').textContent = lastPatternObject.description;
+                }
+                return;
+            }
+            
+            applyPatternLogic(pattern);
+            lastConfirmedPatternId = newlySelectedPatternId; 
+        }
+
+
+        function applyPatternLogic(pattern) {
+            if (!pattern) return;
+ 
+            document.getElementById('patternDescriptionDisplay').textContent = pattern.description;
+
+            for (const hintId in originalHints) {
+                const hintElement = document.getElementById(hintId);
+                if (hintElement) {
+                    hintElement.textContent = originalHints[hintId];
+                }
+            }
+            
+            const blankSlateDefinition = encounterPatterns.find(p => p.id === "blank_slate");
+            if (blankSlateDefinition && blankSlateDefinition.pre_populated_fields) {
+                for (const fieldId in blankSlateDefinition.pre_populated_fields) {
+                    const elementToClear = document.getElementById(fieldId);
+                    if (elementToClear) {
+                        elementToClear.value = ""; 
+                    }
+                }
+            }
+
+            if (pattern.pre_populated_fields) {
+                for (const fieldId in pattern.pre_populated_fields) {
+                    const element = document.getElementById(fieldId);
+                    if (element) {
+                        element.value = pattern.pre_populated_fields[fieldId];
+                    } else {
+                        console.warn(`Element with ID "${fieldId}" not found for pattern pre-population.`);
+                    }
+                }
+            }
+
+            if (pattern.specific_prompts) {
+                for (const hintId in pattern.specific_prompts) {
+                    const hintElement = document.getElementById(hintId);
+                    if (hintElement) {
+                        hintElement.textContent = pattern.specific_prompts[hintId];
+                    } else {
+                        console.warn(`Hint element with ID "${hintId}" not found for pattern prompt.`);
+                    }
+                }
+            }
+        }
+
+        function getEncounterDataFromForm(includePatternId = true) {
+            const encounterData = {};
+            const form = document.getElementById('encounterForm');
+            
+            if (includePatternId) {
+                encounterData.selectedPatternId = document.getElementById('encounterPatternSelect').value;
+            }
+
+            const fieldsToSave = [
+                "seed", "dramaticQuestion", "encounterType", "primaryConflict", 
+                "conflictOpposition", "npcMotivation", "victoryPaths", "playerObjectives", 
+                "oppositionObjectives", "consequences", "environmentDescription", 
+                "atmosphereMood", "emotionalIntensity", "endConditions", 
+                "narrativeLinks", "largerSituation", "leftHooks"
+            ];
+
+            fieldsToSave.forEach(fieldName => {
+                const element = form.elements[fieldName];
+                if (element) {
+                    encounterData[fieldName] = element.value;
+                }
+            });
+
+            function getListItems(containerId) {
+                const items = [];
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.querySelectorAll('.list-item span').forEach(span => items.push(span.textContent));
+                }
+                return items;
+            }
+            encounterData.hooksList = getListItems('hooksListContainer');
+            encounterData.decisionPoints = getListItems('decisionPointsContainer');
+            encounterData.interactiveElements = getListItems('interactiveElementsContainer');
+            
+            return encounterData;
+        }
+
+        function downloadEncounterData() {
+            const encounterData = getEncounterDataFromForm();
+            const jsonString = JSON.stringify(encounterData, null, 2); 
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'encounter.json'; 
+            document.body.appendChild(a); 
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); 
+            showAppMessage('Encounter data downloaded as encounter.json!', 'success');
+        }
+
+        function populateFormWithData(data) {
+            const form = document.getElementById('encounterForm'); 
+            document.getElementById('hooksListContainer').innerHTML = '';
+            document.getElementById('decisionPointsContainer').innerHTML = '';
+            document.getElementById('interactiveElementsContainer').innerHTML = '';
+            
+            let patternToApplyOnInit = encounterPatterns.find(p => p.id === "blank_slate"); 
+
+            if (data.selectedPatternId) {
+                const foundPattern = encounterPatterns.find(p => p.id === data.selectedPatternId);
+                if (foundPattern) {
+                    patternToApplyOnInit = foundPattern;
+                }
+                document.getElementById('encounterPatternSelect').value = data.selectedPatternId; 
+                lastConfirmedPatternId = data.selectedPatternId; 
+            } else {
+                 document.getElementById('encounterPatternSelect').value = "blank_slate";
+                 lastConfirmedPatternId = "blank_slate";
+            }
+            applyPatternLogic(patternToApplyOnInit); 
+
+            for (const key in data) {
+                if (data.hasOwnProperty(key) && key !== 'selectedPatternId') {
+                    if (key === 'hooksList' && Array.isArray(data[key])) {
+                        data[key].forEach(itemText => renderListItem('hooksListContainer', itemText));
+                    } else if (key === 'decisionPoints' && Array.isArray(data[key])) {
+                        data[key].forEach(itemText => renderListItem('decisionPointsContainer', itemText));
+                    } else if (key === 'interactiveElements' && Array.isArray(data[key])) {
+                        data[key].forEach(itemText => renderListItem('interactiveElementsContainer', itemText));
+                    } else {
+                        const element = form.elements[key];
+                        if (element) {
+                             if (element.length && typeof element.item === 'function' && element.type !== 'select-one') { 
+                                for(let i=0; i < element.length; i++) {
+                                    if(element[i].value === data[key]) { element[i].checked = true; break; }
+                                }
+                            } else { 
+                                element.value = data[key];
+                            }
+                        }
+                    }
+                }
+            }
+            showAppMessage('Form populated with data from file!', 'success');
+        }
+
+        function loadEncounterFromFile() {
+            const fileInput = document.getElementById('uploadFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                showAppMessage('Please select a JSON file to upload.', 'error');
+                return;
+            }
+            if (file.type !== "application/json") {
+                showAppMessage('Invalid file type. Please upload a .json file.', 'error');
+                fileInput.value = ''; 
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const jsonData = JSON.parse(event.target.result);
+                    populateFormWithData(jsonData);
+                } catch (e) {
+                    showAppMessage('Error parsing JSON file: ' + e.message, 'error');
+                    console.error("JSON Parsing Error: ", e);
+                }
+            };
+            reader.onerror = function() {
+                showAppMessage('Error reading file.', 'error');
+                console.error("File Reading Error: ", reader.error);
+            };
+            reader.readAsText(file);
+            fileInput.value = ''; 
+        }
+
+        function triggerPrint() {
+            window.print();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            storeOriginalHints(); 
+            populatePatternSelector(); 
+            
+            const initialPattern = encounterPatterns.find(p => p.id === lastConfirmedPatternId);
+            if (initialPattern) {
+                 document.getElementById('patternDescriptionDisplay').textContent = initialPattern.description;
+                 if(lastConfirmedPatternId === "blank_slate") {
+                    applyPatternLogic(initialPattern);
+                 }
+            }
+
+            const buttons = document.querySelectorAll('button, [role="button"]');
+            buttons.forEach(button => button.setAttribute('tabindex', '0')); 
+        });
+
+    </script>
+</body>
+</html>
